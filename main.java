@@ -1,9 +1,10 @@
 
 /**
-Names: Bridget Naylor, Forgot your name sorry partner
+Names: Bridget Naylor, David P
 Date: 3/15/2021
 Lab 8 Interface
 */
+import java.util.Scanner;
 class Main {
 
   /**
@@ -14,27 +15,89 @@ repeats from the menu until the user successfully opens the door.
   @param th door that has been chosen
   @return none
   */
-  static void openDoor( Door d )
+  public static void openDoor(Door d)
   {
-    System.out.println( d.open());
-    while ( d.open() == false )
+    boolean isOpen = false;
+    int input;
+    System.out.println(d.examine());
+        
+    while (isOpen == false)
     {
-      System.out.println(d.examine());
       System.out.println(d.menu());
-      int userInput = CheckInput.getInt();
-      System.out.println(d.unlocking( userInput ));
+      input = getIntRange(1, d.getMenuMax());
+      System.out.println(d.unlocking(input));
+      if (d.open() == true) 
+      {
+        System.out.println(d.success());
+        isOpen = true;
+      }
+      else
+      {
+        System.out.println(d.clue());
+      }
     }
-
-
   }
 
+    /**
+  @description: gets the user's input in a range depending on which door was picked
+  @param the min and max for this particular door
+  @return user's choice
+  */
   static int getIntRange( int min, int max )
   {
-    return min;
+    Scanner in = new Scanner( System.in );
+		int input = 0;
+		boolean valid = false;
+		while( !valid ) {
+			if( in.hasNextInt() ) {
+				input = in.nextInt();
+				if( input <= max && input >= min ) {
+					valid = true;
+				} else {
+					System.out.println( "Invalid Range." );
+				}
+			} else {
+				in.next(); //clear invalid string
+				System.out.println( "Invalid Input." );
+			}
+		}
+		return input;
   }
 
   public static void main(String[] args) {
-    BasicDoor door = new BasicDoor();
-    openDoor( door );
-  }
+        
+        Door door = new BasicDoor();
+        int randomNumber;
+        System.out.println("Welcome to the Escape Room. You must unlock 3 doors to escape...");
+        
+        for (int doorsOpened = 0; doorsOpened < 3; doorsOpened++){
+
+            randomNumber = (int)(Math.random() * 5);
+randomNumber = 4;
+            if (randomNumber == 0)
+            {
+              door = new BasicDoor();
+            }
+            else if (randomNumber == 1)
+            {
+              door = new LockedDoor();
+            }
+            else if ( randomNumber == 2 )
+            {
+              door = new ComboDoor();
+            }   
+            else if ( randomNumber == 3 )
+            {
+              door = new DeadboltDoor();
+            }  
+            else if ( randomNumber == 4 )
+            {
+              door = new CodeDoor();
+            }       
+            openDoor(door);
+        }
+
+        System.out.println("Congratulations! You escaped... this time.");
+
+    }
 }
